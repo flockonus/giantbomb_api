@@ -1,6 +1,7 @@
 
 /**
- * Module dependencies.
+ * Run this program with the first param being your GiantBomb API key, ex:
+ *   node app.js cbddec5e8c39103d16a722ae08a30ea6a...
  */
 
 var express = require('express');
@@ -40,5 +41,5 @@ app.get('/', function(req, res){
   });
 });
 
-app.listen(3000);
-console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
+app.listen(8143);
+console.log("Express server listening on port %d in %s mode", app.address().port);

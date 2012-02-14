@@ -30,6 +30,12 @@ function GBAPI (key, baseLimit){
 	this.baseLimit = baseLimit || 100
 }
 
+/*
+ * Helper method for building full a URL
+ * @param {String} path	A valid path for the URL, always finish with a slash, ex: 'games/', 'game/67/'
+ * @param {Object} params	Some parameter for the URL, see http://api.giantbomb.com/documentation/ for fields
+ * @return {String} a ready-to-use URL including api_key, format, limit, offset and +
+ */
 GBAPI.prototype.buildUrl = function( path, params ){
 	if( typeof params !== 'object' )
 		params = {}
@@ -44,6 +50,11 @@ GBAPI.prototype.buildUrl = function( path, params ){
 	return url
 }
 
+/*
+ * Convenience caller of URLs
+ * @param {String} url a ready-to-use URL of giantbomb API
+ * @param {Function} cb a callback function, first param is a possible error, second is the object with the full response. Defaults to console.log
+ */
 GBAPI.prototype.exec = function( url, cb ){
 	if( typeof cb !== 'function')
 		cb = console.log
@@ -55,7 +66,9 @@ GBAPI.prototype.exec = function( url, cb ){
 	})
 }
 
-
+/*
+ * Retrieve id and name of platforms
+ */
 GBAPI.prototype.platforms = function(cb, offset) {
 	
 	var url = this.buildUrl('platforms/', {
@@ -66,6 +79,9 @@ GBAPI.prototype.platforms = function(cb, offset) {
 	this.exec( url, cb )
 };
 
+/*
+ * Retrieve all games from a platform
+ */
 GBAPI.prototype.gamesOfPlatform = function(platformId, cb, offset) {
 	
 	var url = this.buildUrl('games/', {
@@ -77,6 +93,9 @@ GBAPI.prototype.gamesOfPlatform = function(platformId, cb, offset) {
 	this.exec( url, cb )
 };
 
+/*
+ * Retrieve all specific data from a game!
+ */
 GBAPI.prototype.game = function(gameId, cb) {
 	
 	var url = this.buildUrl('game/'+gameId+'/', {} )
