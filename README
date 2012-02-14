@@ -1,0 +1,21 @@
+# GiantBomb API Explorer
+
+Made for node.js
+
+## Use
+
+    GBAPI = require('./main.js'); gb = new GBAPI('your-api-token', 3);
+    
+    // now, make some requests
+    
+    gb.platforms()
+		
+		gb.gamesOfPlatform( 36 ) // wii
+		
+		gb.game( 67, function(err, resp){ console.log( resp.results.name, '-', resp.results.original_release_date ) } ) // tiger woods
+
+## Extending
+
+The API is really easy to extend by calling methods `buildtUrl` and `exec`
+
+Upon creating useful methods you may send me a pull request or post it in a gist.
