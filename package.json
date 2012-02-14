@@ -2,17 +2,16 @@
 , "description" : "GiantBomb API Explorer"
 , "tags" : ["api", "games", "giantbomb"]
 , "version" : "0.0.1"
-, "author" : "Fabiano P Soriani <name+lastname@gmail.com>"
+, "homepage" : "https://github.com/flockonus/giantbomb_api"
+, "author" : "Fabiano Pereira Soriani <fabianosoriani@gmail.com>"
 , "dependencies": 
 	{ "request": "2.9.100"
   , "qs": "0.4.2"
 	}
 , "repository" :
   { "type" : "git"
-  , "url" : "http://github.com/...git"
+  , "url" : "https://github.com/flockonus/giantbomb_api.git"
   }
-, "bugs" :
-  { "url" : "http://github.com/mikeal/request/issues" }
 , "engines" : ["node >= 0.4.7"]
 , "main" : "./main"
 }
