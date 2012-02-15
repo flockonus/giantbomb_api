@@ -4,5 +4,6 @@
   , "private": true
   , "dependencies": {
       "express": "2.4.6"
+		,	"underscore": "> 0.1.0"
   }
 }

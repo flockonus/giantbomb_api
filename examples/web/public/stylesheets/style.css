@@ -1,8 +1,61 @@
 body {
-  padding: 50px;
+/*  padding: 50px;*/
+	padding: 0;
+	margin: 0;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: #999;
 }
 
 a {
   color: #00B7FF;
+}
+
+#headerC{
+	width: auto;
+/*	padding: 10px 1%;*/
+	margin: 0;
+	font-size: 30px;
+	color: white;
+	text-align: center;
+}
+
+#headerC > div{
+	border: 1px black dashed;
+	padding: 5px 0;
+}
+
+/*http://www.w3.org/TR/selectors/#structural-pseudos*/
+#headerC > div:nth-child(1){
+	background-color: #F00;
+}
+
+#headerC > div:nth-child(2){
+	background-color: #0F0;
+}
+
+#headerC > div:nth-child(3){
+	background-color: #00F;
+}
+
+#headerC > div:nth-child(4){
+	background-color: #999;
+}
+
+#headerC > div:nth-child(5){
+	background-color: #333;
+}
+
+#flash{
+	background-color: #CFC;
+	border: solid 1px #6C6;
+	border-image: initial;
+	padding: 0;
+	margin: 0;
+	float: left;
+	width: 99.5%;
+	text-align: center;
+}
+
+#contentC{
+	
 }

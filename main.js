@@ -62,7 +62,12 @@ GBAPI.prototype.exec = function( url, cb ){
 	console.log('request for url:', url)
 	
 	request.get( url, function(err, req, body) {
-		cb( err, JSON.parse(body) )
+		var data = JSON.parse(body)
+		if( data.status_code > 1 && !err ){
+			err = data
+		}
+		//console.log("---", err, data)
+		cb( err, data )
 	})
 }
 
