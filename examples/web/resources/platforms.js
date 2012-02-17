@@ -1,3 +1,5 @@
+var util = require('util')
+
 exports.index = function(req, res){
 	var page = (req.query.page || 0)*100
 	

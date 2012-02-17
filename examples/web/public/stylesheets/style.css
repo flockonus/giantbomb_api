@@ -3,11 +3,14 @@ body {
 	padding: 0;
 	margin: 0;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
-  background-color: #999;
+  background-color: #CCC;
+  overflow-y: visible;
+  min-width: 700px;
 }
 
-a {
-  color: #00B7FF;
+a, .klink {
+  color: #00A7FF;
+  cursor:pointer;
 }
 
 #headerC{
@@ -20,8 +23,33 @@ a {
 }
 
 #headerC > div{
-	border: 1px black dashed;
-	padding: 5px 0;
+	border-bottom: 1px black dashed;
+	padding: 0.5% 0;
+}
+
+.row-first{
+	float: left;
+	width: 3%;
+	font-size: 1.5em;
+	padding: 0 5% 0 1%;
+	border-right: black 1px dashed;
+}
+
+.row-middle{
+	float: left;
+/*	width: 12%;*/
+	font-size: 1.2em;
+	padding: 0 0 0 1%;
+}
+
+.row-last{
+	float: right;
+	font-size: 1.2em;
+	padding: 0 1%;
+}
+
+.clear{
+	clear: both;
 }
 
 /*http://www.w3.org/TR/selectors/#structural-pseudos*/
@@ -57,5 +85,6 @@ a {
 }
 
 #contentC{
-	
+	padding: 20px;
+	font-size: 1.5em;
 }
