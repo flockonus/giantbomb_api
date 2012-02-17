@@ -1,5 +1,5 @@
 if( !(typeof jQuery === 'function' && typeof _ === 'function') ){
-	throw new Error('Kaiser demands jQuery >1.6')
+	throw new Error('Kaiser demands jQuery >1.6 and Underscore.js')
 }
 
 
@@ -19,21 +19,20 @@ Kaiser.fetchResource = function( resource, id, refresh, cb ) {
 	}
 	
 	var url = Kaiser.resources[resource].baseUrl
-	if( id ) url += '/'+id
+	if( id ) url += id
 	// do we this request on cache?
 	if( Kaiser.cache[url] && !refresh ){
 		console.log('cached: ', url)
 		cb(null, Kaiser.cache[url])
 		
-	} else { // we must fetch it on server
-		
+	} else { // we must fetch it from server
 		
 		j.ajax({
 			url: url,
 			error: function(a,err,c) {
 				cb(err, {})
 			},
-			success: function(data) {
+			success: function(data,b,c) {
 				console.log('fetched: ', url)
 				Kaiser.cache[url] = data
 				cb( null, data )
@@ -113,6 +112,7 @@ function addHeader(state) {
 };
 
 Kaiser.currentState = function() {
+	// either this or prototype Array for .last()
 	return j( Kaiser.stack ).get(-1)
 };
 
