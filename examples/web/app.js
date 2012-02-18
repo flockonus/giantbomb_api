@@ -14,7 +14,7 @@ var app = module.exports = express.createServer()
 	, swig = require('./lib/swig') // https://github.com/paularmstrong/swig/tree/master/docs
 	, gb = new GBAPI(process.argv[2]);
 
-// lazy, I know..
+// lazy
 GLOBAL.gb = gb
 
 swig.init({
@@ -45,15 +45,8 @@ app.configure('production', function(){
   app.use(express.errorHandler()); 
 });
 
-
-
 // Routes
-
-app.get('/', function(req, res){
-  res.render('index',{});
-});
-
-app.get('/platforms', require('./resources/platforms').index )
+require('./routes.js')(app)
 
 
 app.listen(8143);

@@ -8,7 +8,7 @@ body {
   min-width: 700px;
 }
 
-a, .klink {
+a, .klink, .kback {
   color: #00A7FF;
   cursor:pointer;
 }
@@ -87,4 +87,10 @@ a, .klink {
 #contentC{
 	padding: 20px;
 	font-size: 1.5em;
+}
+
+#spinnerC {
+	display: none;
+	text-align: center;
+	width: 99.5%;
 }

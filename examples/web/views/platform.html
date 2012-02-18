@@ -1,0 +1,9 @@
+
+<!-- TODO esse conteudo vira somente o body! -->
+
+
+<ul>
+{% for r in results %}
+    <li><a href="#" class="klink" data-resource="games" data-id="{{r.id}}">{{r.name}}</a></li>
+{% endfor %}
+</ul>
