@@ -42,7 +42,12 @@ GBAPI.prototype.buildUrl = function( path, params ){
 	params.api_key = this.apiKey
 	params.limit = params.limit || this.baseLimit
 	params.format  = 'json'
-	params.offset = params.offset || 0
+	if( params.page ){ // 1, 2, .. infinity
+		params.offset = (params.page - 1)*this.baseLimit
+		delete params.page
+	} else {
+		params.offset = params.offset || 0
+	}
 	
 	var url = base_url
 	url += path+"?"
@@ -74,11 +79,11 @@ GBAPI.prototype.exec = function( url, cb ){
 /*
  * Retrieve id and name of platforms
  */
-GBAPI.prototype.platforms = function(cb, offset) {
+GBAPI.prototype.platforms = function(cb, page) {
 	
 	var url = this.buildUrl('platforms/', {
 		field_list: 'id,name',
-		offset: offset,
+		page: page,
 	})
 	
 	this.exec( url, cb )
@@ -87,12 +92,12 @@ GBAPI.prototype.platforms = function(cb, offset) {
 /*
  * Retrieve all games from a platform
  */
-GBAPI.prototype.gamesOfPlatform = function(platformId, cb, offset) {
+GBAPI.prototype.gamesOfPlatform = function(platformId, cb, page) {
 	
 	var url = this.buildUrl('games/', {
 		platforms: platformId,
 		field_list: 'id,name',
-		offset: offset,
+		page: page,
 	})
 	
 	this.exec( url, cb )

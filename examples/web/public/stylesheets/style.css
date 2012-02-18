@@ -44,9 +44,22 @@ a, .klink, .kback {
 
 .row-last{
 	float: right;
-	font-size: 1.2em;
+	font-size: 0.9em;
 	padding: 0 1%;
 }
+
+.row-last form{
+	display: inline;
+}
+
+.row-last input{
+	padding: 0 2px;
+	font-size: 0.9em;
+	width: 30px;
+	background: transparent;
+	color: white;
+}
+
 
 .clear{
 	clear: both;

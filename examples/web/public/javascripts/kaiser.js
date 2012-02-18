@@ -6,14 +6,15 @@ if( !(typeof jQuery === 'function' && typeof _ === 'function') ){
 
 (function(j) {
 
-// my only GLOBAL
+// only GLOBAL
 Kaiser = {
 	stack: [], // holds active States, starts Empty
 	root: [],
 	cache: {}, // holds loaded resources
+	resources: {},
 	transitioning: false,
 	noticing: false,
-	noticeTime: 3000
+	noticeTime: 2500
 }
 
 Kaiser.notice = function (msg) {
@@ -38,6 +39,7 @@ Kaiser.notice = function (msg) {
 
 function transitionIn() {
 	if( Kaiser.transitioning ){
+		Kaiser.notice('Waiting another resource..')
 		return false
 	} else {
 		Kaiser.transitioning = true
@@ -54,14 +56,27 @@ function transitionOff() {
 
 
 
-Kaiser.fetchResource = function( resource, id, refresh, cb ) {
-	if( !( (typeof resource === 'string') && Kaiser.resources[resource]) ){
+Kaiser.getResource = function( resource, id, params, refresh, cb ) {
+	// currently, resource is only being passed as string
+	if( !( (typeof resource === 'string') && ( resource === ':current' || Kaiser.resources[resource])) ){
 		var err = new Error("Invalid resource")
 		cb(err, null)
 	}
 	
-	var url = Kaiser.resources[resource].baseUrl
+	// for now covering pagination case
+	if( resource === ':current' ){
+		resource = Kaiser.currentState()
+		id = resource.id
+	} else {
+		resource = Kaiser.resources[resource]
+	}
+	
+	var url = resource.baseUrl
 	if( id ) url += id
+	if( !params ) params = {page:1}
+	url +=	'?'+j.param(params)
+	
+	
 	// do we this request on cache?
 	if( Kaiser.cache[url] && !refresh ){
 		console.log('cached: ', url)
@@ -133,7 +148,7 @@ function klinkHandler (e) {
 	// add header before response just to add some feedback
 	addHeader( currentState )
 	
-	var content = Kaiser.fetchResource( resource, id, refresh, function(err, data) {
+	Kaiser.getResource( resource, id, null, refresh, function(err, data) {
 		transitionOff()
 		if(err){
 			j('#contentC').text('FATAL ERROR, see console')
@@ -147,6 +162,31 @@ function klinkHandler (e) {
 	
 	return false
 }
+
+function kpageHandler(e) {
+	// kinda like a weak mutex
+	if( !transitionIn() ){
+		// in case another transition is already happening must ignore click.
+		return false
+	}
+	// only works if page is numeric and > 0
+	var page = parseInt(j(e.currentTarget).children('.page-counter').val())
+	if( page && page > 0 ){
+		Kaiser.getResource(':current', null, {page:page}, false, function(err,data) {
+			transitionOff()
+			if(err){
+				j('#contentC').text('FATAL ERROR, see console')
+				throw err
+			}
+			
+			// currently only supports html partials
+			Kaiser.currentState.content = data
+			// dont need to set the page as view should do it
+			j('#contentC').html(data)
+		})
+	}
+	return false
+};
 
 Kaiser.onLoad = function () {
 	
@@ -162,6 +202,8 @@ Kaiser.onLoad = function () {
 	j('.klink').live( 'click', klinkHandler )
 	
 	j('.kback').live( 'click', kbackHandler )
+	
+	j('.kpageform').live( 'submit', kpageHandler )
 	
 	// append all roots as ul-li
 	j('#contentC').append('<ul></ul>')
@@ -180,18 +222,27 @@ Kaiser.onLoad = function () {
 	Kaiser.cache['root'] = j('#contentC').html()
 }
 
+function headerTemplate( state ) {
+	var header = '<div>'+
+		'<div class="row-first kback">&#10007;</div>'+
+		'<div class="row-middle">'+(state.title || state.name)+'</div>'+
+		'<div class="row-last"><form class="kpageform"><input type="text" class="page-counter" value="'+state.page+'" /></form>'+
+			'/<span class="page-max">'+(state.maxPages||'?')+'</span></div>'+
+		'<div class="clear"></div>'+
+	'</div>'
+	return header
+};
+
 function addHeader(state) {
 	// some code to disable the previous state
 	j('#headerC > div:last').children().removeClass('kback')
 	
-	// TODO something better..
-	var header = '<div>'+
-		'<div class="row-first kback">&#10007;</div>'+
-		'<div class="row-middle">'+(state.title || state.name)+'</div>'+
-		'<div class="row-last">-</div>'+
-		'<div class="clear"></div>'+
-	'</div>'
-	j('#headerC').append(header)
+	j('#headerC').append( headerTemplate(state) )
+};
+
+Kaiser.updateHeader = function() {
+	j('#headerC > div:last').remove()
+	j('#headerC').append( headerTemplate( Kaiser.currentState() ) )
 };
 
 Kaiser.currentState = function() {
@@ -201,13 +252,13 @@ Kaiser.currentState = function() {
 
 
 Kaiser.pushState = function( state ) {
-	
 	// TODO some code to validate state
+	
+	Kaiser.stack.push( state )
 	
 	// some code to add content since header was added before
 	j('#contentC').html(state.content)
 	
-	Kaiser.stack.push( state )
 };
 
 Kaiser.popState = function(  ) {
@@ -238,10 +289,12 @@ Kaiser.resource = function(name, baseUrl) {
 	}
 };
 
-// all models available
+// all models available --a small but fundamental mistake, resource itself is unaware of own id, shall refactor
 Kaiser.resources = {
 	platforms: Kaiser.resource('Platforms', 'platforms/'),
 }
+
+
 
 // All states enabled to be listed from zero
 Kaiser.root.push('platforms')

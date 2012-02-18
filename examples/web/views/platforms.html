@@ -1,9 +1,12 @@
-
-<!-- TODO esse conteudo vira somente o body! -->
-
-
 <ul>
 {% for r in results %}
     <li><a href="#" class="klink" data-resource="platforms" data-id="{{r.id}}">{{r.name}}</a></li>
 {% endfor %}
 </ul>
+
+<script type="text/javascript" charset="utf-8">
+    var state = Kaiser.currentState()
+    state.maxPages = Math.ceil( {{meta.number_of_total_results}}/100 )
+    state.page = {{meta.page}}
+    Kaiser.updateHeader()
+</script>
