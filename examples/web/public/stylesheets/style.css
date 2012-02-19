@@ -60,6 +60,14 @@ a, .klink, .kback {
 	color: white;
 }
 
+#headerC .knext-page, #headerC .kprev-page{
+	font-size: 1.1em;
+	padding: 0;
+	cursor: pointer;
+	font-weight: bold;
+}
+
+
 
 .clear{
 	clear: both;

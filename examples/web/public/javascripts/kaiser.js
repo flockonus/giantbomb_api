@@ -37,6 +37,7 @@ Kaiser.notice = function (msg) {
 	}
 };
 
+// check if is not transitioning, if isn't then do
 function transitionIn() {
 	if( Kaiser.transitioning ){
 		Kaiser.notice('Waiting another resource..')
@@ -48,6 +49,7 @@ function transitionIn() {
 	}
 }
 
+// just shuts off the transitioning
 function transitionOff() {
 	Kaiser.transitioning = false
 	j('#spinnerC').prependTo('body').hide()
@@ -98,6 +100,7 @@ Kaiser.getResource = function( resource, id, params, refresh, cb ) {
 	}
 }
 
+// go back 1 resource level
 function kbackHandler (e) {
 	// do not work between resource-loading
 	if( !Kaiser.transitioning ){
@@ -163,14 +166,8 @@ function klinkHandler (e) {
 	return false
 }
 
-function kpageHandler(e) {
-	// kinda like a weak mutex
-	if( !transitionIn() ){
-		// in case another transition is already happening must ignore click.
-		return false
-	}
-	// only works if page is numeric and > 0
-	var page = parseInt(j(e.currentTarget).children('.page-counter').val())
+function loadPage(page){
+	console.log( "requiring page..", page )
 	if( page && page > 0 ){
 		Kaiser.getResource(':current', null, {page:page}, false, function(err,data) {
 			transitionOff()
@@ -185,8 +182,41 @@ function kpageHandler(e) {
 			j('#contentC').html(data)
 		})
 	}
+}
+
+function kpageHandler(e) {
+	if( !transitionIn() ){
+		// in case another transition is already happening must ignore click.
+		return false
+	}
+	// only works if page is numeric and > 0
+	var page = parseInt(j(e.currentTarget).children('.page-counter').val())
+	loadPage( page )
 	return false
 };
+
+function knextPageHandler(e){
+	
+	var state = Kaiser.currentState()
+	console.log( "next", "current page:", state.page )
+	
+	// only act if not on last page!
+	if( state.page < state.maxPages && transitionIn() ){
+		loadPage( state.page +1 )
+	}
+	return false
+}
+
+function kprevPageHandler (argument) {
+	var state = Kaiser.currentState()
+	console.log( "prev", "current page:", state.page )
+	
+	// only act if not on first page!
+	if( state.page > 1 && transitionIn()  ){
+		loadPage( state.page -1 )
+	}
+	return false
+}
 
 Kaiser.onLoad = function () {
 	
@@ -204,6 +234,10 @@ Kaiser.onLoad = function () {
 	j('.kback').live( 'click', kbackHandler )
 	
 	j('.kpageform').live( 'submit', kpageHandler )
+	
+	j('.knext-page').live( 'click', knextPageHandler )
+	
+	j('.kprev-page').live( 'click', kprevPageHandler )
 	
 	// append all roots as ul-li
 	j('#contentC').append('<ul></ul>')
@@ -226,12 +260,13 @@ function headerTemplate( state ) {
 	var header = '<div>'+
 		'<div class="row-first kback">&#10007;</div>'+
 		'<div class="row-middle">'+(state.title || state.name)+'</div>'+
-		'<div class="row-last"><form class="kpageform"><input type="text" class="page-counter" value="'+state.page+'" /></form>'+
-			'/<span class="page-max">'+(state.maxPages||'?')+'</span></div>'+
+		'<div class="row-last"><span class="kprev-page">&lsaquo;</span><form class="kpageform"><input type="text" class="page-counter" value="'+state.page+'" /></form>'+
+			'/<span class="page-max">'+(state.maxPages||'?')+'</span><span class="knext-page">&rsaquo;</span></div>'+
 		'<div class="clear"></div>'+
 	'</div>'
 	return header
 };
+
 
 function addHeader(state) {
 	// some code to disable the previous state
@@ -292,6 +327,7 @@ Kaiser.resource = function(name, baseUrl) {
 // all models available --a small but fundamental mistake, resource itself is unaware of own id, shall refactor
 Kaiser.resources = {
 	platforms: Kaiser.resource('Platforms', 'platforms/'),
+	games:     Kaiser.resource('Games', 'games/'),
 }
 
 

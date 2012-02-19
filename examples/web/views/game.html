@@ -1,0 +1,34 @@
+<div>
+    <h1><img src="{{game.image.thumb_url}}" alt="cover" />{{game.name}} <a href="{{game.site_detail_url}}" target="_blank">@GB&#10138;</a></h1>
+    
+    <p>released at: {{game.original_release_date}}</p>
+    
+    <p># of user-reviews: {{game.number_of_user_reviews}}</p>
+    
+    {% if game.genres[0] %}
+        <div> Genres: 
+        {% for genre in game.genres %}
+            {{ genre.name }},
+        {% endfor %}
+        </div>
+    {% endif %}
+    <br />
+    {% if game.platforms[0] %}
+        <div> Available for: 
+        {% for plat in game.platforms %}
+            {{ plat.name }},
+        {% endfor %}
+        </div>
+    {% endif %}
+    <br />
+    
+    <p>{{game.description}}</p>
+    <br />
+    {% if game.similar_games[0] %}
+        <div> Similar to: 
+        {% for simG in game.similar_games %}
+            {{ simG.name }},
+        {% endfor %}
+        </div>
+    {% endif %}
+</div>
