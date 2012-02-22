@@ -44,6 +44,8 @@ function transitionIn() {
 		return false
 	} else {
 		Kaiser.transitioning = true
+		var currentState = Kaiser.currentState()
+		if( currentState ) currentState.scrollTop = $('body').scrollTop();
 		j('#contentC').html( j('#spinnerC').show() )
 		return true
 	}
@@ -166,6 +168,7 @@ function klinkHandler (e) {
 	return false
 }
 
+// pagination feature
 function loadPage(page){
 	console.log( "requiring page..", page )
 	if( page && page > 0 ){
@@ -177,7 +180,7 @@ function loadPage(page){
 			}
 			
 			// currently only supports html partials
-			Kaiser.currentState.content = data
+			Kaiser.currentState().content = data
 			// dont need to set the page as view should do it
 			j('#contentC').html(data)
 		})
@@ -287,7 +290,7 @@ Kaiser.currentState = function() {
 
 
 Kaiser.pushState = function( state ) {
-	// TODO some code to validate state
+	// TODO some code to validating state
 	
 	Kaiser.stack.push( state )
 	
@@ -304,6 +307,7 @@ Kaiser.popState = function(  ) {
 	var currentState = Kaiser.currentState()
 	if( currentState ){
 		j('#contentC').html(currentState.content)
+		j('body').scrollTop( currentState.scrollTop )
 	} else {
 		j('#contentC').html( Kaiser.cache.root )
 	}
@@ -319,8 +323,10 @@ Kaiser.resource = function(name, baseUrl) {
 		page: 1,
 		maxPages: null,
 		content: '',
+		scrollTop: 0,
 		// title
 		// id
+		// scroll
 	}
 };
 
