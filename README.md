@@ -15,7 +15,7 @@ var GBAPI = require('./main.js');
 
 var apiToken = 'your-api-token'; //required!
 var responseLimit = 3; //defaults to a 100, but 3 is goot to test
-var cacheHours = 0; defaults to 0 as disabled
+var cacheHours = 0; //defaults to 0 as disabled
 
 var gb = new GBAPI(apiToken, responseLimit, cacheHours);
 
