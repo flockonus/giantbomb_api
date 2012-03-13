@@ -113,7 +113,7 @@ GBAPI.prototype.gamesOfPlatform = function(platformId, cb, page) {
 	
 	var url = this.buildUrl('games/', {
 		platforms: platformId,
-		field_list: 'id,name',
+		field_list: 'name,id,original_release_date,number_of_user_reviews',
 		page: page,
 	})
 	
