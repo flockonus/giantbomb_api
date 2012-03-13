@@ -83,7 +83,7 @@ GBAPI.prototype.exec = function( url, cb ){
 				err = data
 			} else {
 				ctx.cache[url] = {
-					data: data,
+					data: JSON.parse(body), // copying is safer
 					at: new Date(),
 				}
 			}
