@@ -27,10 +27,10 @@ var request = require('request')
 	, base_url = 'http://api.giantbomb.com/'
 	,	qs = require('qs')
 
-function GBAPI (key, baseLimit, cacheMinutes){
+function GBAPI (key, baseLimit, cacheHours){
 	this.apiKey = key
 	this.baseLimit = baseLimit || 100
-	this.cacheMinutes = cacheMinutes || 0
+	this.cacheHours = cacheHours || 0
 	this.cache = {}
 }
 
@@ -72,7 +72,7 @@ GBAPI.prototype.exec = function( url, cb ){
 	
 	// try cache first
 	var now = (new Date)
-	if( this.cacheMinutes && this.cache[url] && (now - this.cache[url].at)/3600000 < this.cacheMinutes ){
+	if( this.cacheHours && this.cache[url] && (now - this.cache[url].at)/3600000 < this.cacheHours ){
 		console.log("cache HIT:", url)
 		cb(null, this.cache[url].data)
 	} else {
