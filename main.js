@@ -14,6 +14,8 @@
 //
 /*
 
+
+
 GBAPI = require('./main.js'); gb = new GBAPI('cbddec5e8c39103d16a722ae08a30ea6a883????', 3);
 gb.platforms()
 gb.gamesOfPlatform( 36 ) // wii
@@ -25,9 +27,11 @@ var request = require('request')
 	, base_url = 'http://api.giantbomb.com/'
 	,	qs = require('qs')
 
-function GBAPI (key, baseLimit){
+function GBAPI (key, baseLimit, cacheMinutes){
 	this.apiKey = key
 	this.baseLimit = baseLimit || 100
+	this.cacheMinutes = cacheMinutes || 0
+	this.cache = {}
 }
 
 /*
@@ -61,19 +65,32 @@ GBAPI.prototype.buildUrl = function( path, params ){
  * @param {Function} cb a callback function, first param is a possible error, second is the object with the full response. Defaults to console.log
  */
 GBAPI.prototype.exec = function( url, cb ){
+	var ctx = this
 	if( typeof cb !== 'function')
 		cb = console.log
 	
-	console.log('request for url:', url)
 	
-	request.get( url, function(err, req, body) {
-		var data = JSON.parse(body)
-		if( data.status_code > 1 && !err ){
-			err = data
-		}
-		//console.log("---", err, data)
-		cb( err, data )
-	})
+	// try cache first
+	var now = (new Date)
+	if( this.cacheMinutes && this.cache[url] && (now - this.cache[url].at)/3600000 < this.cacheMinutes ){
+		console.log("cache HIT:", url)
+		cb(null, this.cache[url].data)
+	} else {
+		console.log('requesting url:', url)
+		request.get( url, function(err, req, body) {
+			var data = JSON.parse(body)
+			if( data.status_code > 1 && !err ){
+				err = data
+			} else {
+				ctx.cache[url] = {
+					data: data,
+					at: new Date(),
+				}
+			}
+			//console.log("---", err, data)
+			cb( err, data )
+		})
+	}
 }
 
 /*
