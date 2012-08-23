@@ -1,3 +1,4 @@
+[![build status](https://secure.travis-ci.org/flockonus/giantbomb_api.png)](http://travis-ci.org/flockonus/giantbomb_api)
 # GiantBomb API Explorer
 
 Made for node.js
