@@ -52,7 +52,7 @@ GBAPI.prototype.buildUrl = function( path, params ){
 	} else {
 		params.offset = params.offset || 0
 	}
-	
+
 	var url = base_url
 	url += path+"?"
 	url += qs.stringify(params)
@@ -68,8 +68,8 @@ GBAPI.prototype.exec = function( url, cb ){
 	var ctx = this
 	if( typeof cb !== 'function')
 		cb = console.log
-	
-	
+
+
 	// try cache first
 	var now = (new Date)
 	if( this.cacheHours && this.cache[url] && (now - this.cache[url].at)/3600000 < this.cacheHours ){
@@ -97,12 +97,12 @@ GBAPI.prototype.exec = function( url, cb ){
  * Retrieve id and name of platforms
  */
 GBAPI.prototype.platforms = function(cb, page) {
-	
+
 	var url = this.buildUrl('platforms/', {
 		field_list: 'id,name',
 		page: page,
 	})
-	
+
 	this.exec( url, cb )
 };
 
@@ -110,13 +110,13 @@ GBAPI.prototype.platforms = function(cb, page) {
  * Retrieve all games from a platform
  */
 GBAPI.prototype.gamesOfPlatform = function(platformId, cb, page) {
-	
+
 	var url = this.buildUrl('games/', {
 		platforms: platformId,
 		field_list: 'name,id,original_release_date,number_of_user_reviews',
 		page: page,
 	})
-	
+
 	this.exec( url, cb )
 };
 
@@ -124,12 +124,24 @@ GBAPI.prototype.gamesOfPlatform = function(platformId, cb, page) {
  * Retrieve all specific data from a game!
  */
 GBAPI.prototype.game = function(gameId, cb) {
-	
+
 	var url = this.buildUrl('game/'+gameId+'/', {} )
-	
+
 	this.exec( url, cb )
 };
 
+/*
+ * Search for a game title by name
+ */
+GBAPI.prototype.searchForGameByName = function(gameName,cb){
 
+	var url = this.buildUrl('search/',{
+		query: gameName,
+		resources: "game",
+		limit: 1
+	})
+
+	this.exec( url, cb )
+};
 
 module.exports = GBAPI
