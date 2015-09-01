@@ -1,6 +1,6 @@
 # GiantBomb API Explorer
 
-Made for node.js
+Made for node.js (that was 4y ago)
 
 ## Install
 
