@@ -37,3 +37,8 @@ Upon creating useful methods you may send me a pull request or post it in a gist
 ## Docs
 
 See https://github.com/flockonus/giantbomb_api/blob/master/main.js
+
+## Contributors
+
+- @flockonus
+- @Ronald-Diemicke
